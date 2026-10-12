@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#050505">
+<title>BAND 11</title>
+<meta name="description" content="Det här materialet hittades i skogen på Resarö. Det är adresserat till dig.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&family=Reenie+Beanie&family=Rock+Salt&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23000'/><circle cx='50' cy='50' r='26' fill='%23d61f1f'/></svg>">
+<style>
+  :root {
+    --black: #050505;
+    --forest: #0c0e0b;
+    --trunk: #1b1d18;
+    --osd: #e9e9e1;
+    --rec: #e02424;
+    --paper: #d9d2c0;
+    --paper-line: rgba(70, 90, 140, .25);
+    --pencil: #2b2a28;
+    --marker-red: #8f1414;
+    --dim: #8a8a80;
+    --tape: rgba(230, 220, 170, .55);
+    --sat: env(safe-area-inset-top, 0px);
+    --sar: env(safe-area-inset-right, 0px);
+    --sab: env(safe-area-inset-bottom, 0px);
+    --sal: env(safe-area-inset-left, 0px);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; overflow-x: hidden; background: var(--black); }
+
+  body {
+    -webkit-tap-highlight-color: transparent;
+    background: var(--black);
+    color: var(--osd);
+    font-family: "Special Elite", monospace;
+    overflow-x: hidden;
+  }
+
+  /* ---------- Skogen ---------- */
+  .scene {
+    position: fixed; inset: -4%;
+    z-index: 0;
+    animation: handheld 7s ease-in-out infinite;
+  }
+  @keyframes handheld {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    15%  { transform: translate(-0.6%, 0.4%) rotate(-.3deg); }
+    35%  { transform: translate(0.5%, -0.3%) rotate(.25deg); }
+    55%  { transform: translate(-0.3%, -0.5%) rotate(-.15deg); }
+    75%  { transform: translate(0.6%, 0.3%) rotate(.3deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
+  }
+  .scene svg { width: 100%; height: 100%; display: block; }
+
+  .stickman { transform-box: fill-box; transform-origin: top center; animation: sway 5s ease-in-out infinite; }
+  @keyframes sway { 0%,100% { transform: rotate(5deg); } 50% { transform: rotate(-5deg); } }
+
+  /* Ficklampan */
+  .dark {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    --x: 50vw; --y: 35vh;
+    background: radial-gradient(circle at var(--x) var(--y),
+      rgba(0,0,0,0) 0,
+      rgba(0,0,0,.25) 9vmax,
+      rgba(0,0,0,.82) 20vmax,
+      rgba(0,0,0,.97) 34vmax);
+  }
+
+  .leaf {
+    position: fixed; top: -6vh; z-index: 3; pointer-events: none;
+    opacity: .5;
+    animation: fall linear infinite;
+  }
+  .leaf svg { width: 100%; height: 100%; }
+  @keyframes fall {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    35%  { transform: translate(5vw, 38vh) rotate(150deg); }
+    70%  { transform: translate(-4vw, 76vh) rotate(290deg); }
+    100% { transform: translate(3vw, 112vh) rotate(420deg); }
+  }
+
+  /* ---------- VHS-lager ---------- */
+  .vhs { position: fixed; inset: 0; z-index: 40; pointer-events: none; overflow: hidden; }
+  .scanlines {
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,.28) 0 1px, transparent 1px 3px);
+  }
+  .noise {
+    position: absolute; inset: -50%; width: 200%; height: 200%;
+    opacity: .12;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    animation: noise .4s steps(4) infinite;
+  }
+  @keyframes noise {
+    0% { transform: translate(0,0); } 25% { transform: translate(-4%, 3%); }
+    50% { transform: translate(3%, -2%); } 75% { transform: translate(-2%, -4%); } 100% { transform: translate(0,0); }
+  }
+  .tracking {
+    position: absolute; left: 0; right: 0; height: 7vh;
+    background: linear-gradient(180deg, transparent, rgba(255,255,255,.06) 40%, rgba(255,255,255,.12) 50%, rgba(255,255,255,.06) 60%, transparent);
+    filter: blur(1px);
+    animation: roll 6s linear infinite;
+  }
+  @keyframes roll { from { top: -10vh; } to { top: 110vh; } }
+  .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,.75) 100%); }
+
+  /* Kamerans skärmtext */
+  .osd {
+    position: absolute; inset: 0;
+    font-family: "VT323", monospace;
+    font-size: clamp(1.15rem, 4.2vw, 1.7rem);
+    color: var(--osd);
+    text-shadow: 0 0 4px rgba(255,255,255,.4), 1px 0 rgba(255,0,0,.35), -1px 0 rgba(0,180,255,.35);
+    letter-spacing: 1px;
+  }
+  .osd > * { position: absolute; }
+  .osd .rec { top: calc(18px + var(--sat)); left: calc(18px + var(--sal)); display: flex; align-items: center; gap: 8px; }
+  .osd .rec i { width: .7em; height: .7em; border-radius: 50%; background: var(--rec); box-shadow: 0 0 8px var(--rec); animation: recblink 1s steps(1) infinite; }
+  @keyframes recblink { 50% { opacity: 0; } }
+  .osd .mode { top: calc(18px + var(--sat)); right: calc(18px + var(--sar)); text-align: right; }
+  .osd .batt { display: inline-flex; align-items: center; gap: 2px; margin-left: 10px; vertical-align: middle; }
+  .osd .batt span { width: 18px; height: 10px; border: 2px solid var(--osd); position: relative; display: inline-block; }
+  .osd .batt span::after { content: ""; position: absolute; left: 1px; top: 1px; bottom: 1px; width: 4px; background: var(--rec); animation: recblink 1.4s steps(1) infinite; }
+  .osd .batt b { width: 2px; height: 5px; background: var(--osd); display: inline-block; }
+  .osd .stamp { bottom: calc(18px + var(--sab)); right: calc(18px + var(--sar)); text-align: right; line-height: 1.05; }
+  .osd .play { bottom: calc(18px + var(--sab)); left: calc(18px + var(--sal)); }
+  .sound {
+    position: fixed; z-index: 45;
+    top: calc(14px + var(--sat)); left: 50%; transform: translateX(-50%);
+    font-family: "VT323", monospace; font-size: 1.25rem; letter-spacing: 2px;
+    color: var(--osd); background: rgba(0,0,0,.35);
+    border: 1px solid rgba(233,233,225,.45);
+    padding: 6px 12px 4px; min-height: 36px;
+    cursor: pointer;
+    text-shadow: 0 0 4px rgba(255,255,255,.4);
+  }
+  .sound:focus-visible { outline: 2px solid var(--osd); }
+  .corner { width: 26px; height: 26px; border-color: rgba(233,233,225,.55); border-style: solid; border-width: 0; }
+  .c1 { top: calc(56px + var(--sat)); left: calc(14px + var(--sal)); border-top-width: 2px; border-left-width: 2px; }
+  .c2 { top: calc(56px + var(--sat)); right: calc(14px + var(--sar)); border-top-width: 2px; border-right-width: 2px; }
+  .c3 { bottom: calc(64px + var(--sab)); left: calc(14px + var(--sal)); border-bottom-width: 2px; border-left-width: 2px; }
+  .c4 { bottom: calc(64px + var(--sab)); right: calc(14px + var(--sar)); border-bottom-width: 2px; border-right-width: 2px; }
+
+  /* ---------- Innehåll ---------- */
+  main { position: relative; z-index: 10; }
+
+  .screen {
+    min-height: 100vh; min-height: 100svh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 90px 22px;
+    text-align: center;
+  }
+
+  .caption {
+    font-family: "Special Elite", monospace;
+    font-size: clamp(1.05rem, 4vw, 1.45rem);
+    line-height: 1.7;
+    max-width: 30ch;
+    color: #dcdcd2;
+    text-shadow: 0 0 10px rgba(0,0,0,.9), 0 0 3px #000;
+    opacity: 0;
+    transition: opacity 1.6s ease;
+  }
+  .caption.on { opacity: 1; }
+  .caption + .caption { margin-top: 26px; }
+  .caption.small { font-size: clamp(.9rem, 3.2vw, 1.05rem); color: var(--dim); letter-spacing: 2px; text-transform: uppercase; }
+
+  .scroll-cue {
+    margin-top: 54px;
+    font-family: "VT323", monospace;
+    font-size: clamp(1.6rem, 6vw, 2rem); letter-spacing: 4px;
+    color: var(--osd);
+    background: rgba(0, 0, 0, .55);
+    border: 2px solid rgba(233, 233, 225, .7);
+    padding: 12px 26px 10px;
+    min-height: 56px;
+    cursor: pointer;
+    text-shadow: 0 0 6px rgba(255,255,255,.45), 1px 0 rgba(255,0,0,.4), -1px 0 rgba(0,180,255,.4);
+    box-shadow: 0 0 18px rgba(233, 233, 225, .12);
+    opacity: 0; transition: opacity 2s, background .2s, transform .1s;
+    pointer-events: none;
+  }
+  .scroll-cue.on { opacity: 1; pointer-events: auto; }
+  .scroll-cue.on::after { content: "_"; animation: recblink 1s steps(1) infinite; margin-left: 4px; }
+  .scroll-cue:hover, .scroll-cue:focus-visible { background: rgba(233, 233, 225, .14); outline: none; }
+  .scroll-cue:active { transform: scale(.97); }
+  .scroll-cue .tri { color: var(--rec); text-shadow: 0 0 8px var(--rec); }
+  .next { display: flex; justify-content: center; padding: 2vh 16px; }
+  .next .scroll-cue { margin-top: 0; font-size: clamp(1.25rem, 5vw, 1.6rem); padding: 10px 20px 8px; }
+
+  /* Lappen */
+  .note-wrap {
+    padding: 6vh 16px 4vh;
+    display: flex; justify-content: center;
+    perspective: 1100px;
+    filter: drop-shadow(0 18px 22px rgba(0,0,0,.8)) drop-shadow(0 2px 3px rgba(0,0,0,.7));
+  }
+  .note {
+    --ballpoint: #1b2150;
+    position: relative;
+    width: 100%; max-width: 480px;
+    isolation: isolate;
+    color: var(--ballpoint);
+    padding: 48px 26px 44px 54px;
+    font-family: "Reenie Beanie", cursive;
+    font-size: clamp(1.75rem, 6.6vw, 2.1rem);
+    line-height: 34px;
+    transform: rotateX(4deg) rotate(-1.6deg);
+    transform-origin: 50% 100%;
+    opacity: 0;
+    transition: opacity 1.8s ease;
+  }
+  .note.on { opacity: 1; }
+
+  /* Pappret ritas pixel för pixel av skriptet */
+  .note canvas.paper {
+    position: absolute; inset: 0; z-index: -1;
+    width: 100%; height: 100%;
+    pointer-events: none;
+  }
+  .note.no-canvas { background: #d6ccb4; }
+
+  .note .ink, .note .repeat { position: relative; z-index: 1; mix-blend-mode: multiply; filter: url(#ink); }
+  .note h2 {
+    font-family: "Reenie Beanie", cursive; font-weight: 400;
+    font-size: 1.4em; line-height: 1.05;
+    margin-bottom: 12px;
+  }
+  .note .red { color: #74161a; }
+  .note p { margin: 0; }
+  .note .ink > p, .note h2 { transform-origin: left center; }
+  .note .gap { height: 34px; }
+  .note b { font-weight: 400; text-decoration: underline; text-decoration-thickness: 1.5px; text-underline-offset: 4px; }
+  .note .scratch { position: relative; opacity: .85; }
+  .note .scratch::after {
+    content: ""; position: absolute; left: -5px; right: -5px; top: 46%;
+    height: 10px; transform: translateY(-50%) rotate(-4deg);
+    background: linear-gradient(-8deg, transparent 0 18%, var(--ballpoint) 18% 30%, transparent 30% 55%, var(--ballpoint) 55% 66%, transparent 66%);
+    opacity: .9;
+  }
+  .note .fill { color: rgba(27, 33, 80, .4); border-bottom: 1.5px solid rgba(27, 33, 80, .35); padding: 0 12px; }
+  .note .smudged { filter: blur(.8px); }
+  .note .faint { opacity: .55; }
+  .note .phone {
+    color: #74161a; text-decoration: none;
+    font-size: 1.25em; letter-spacing: 2px;
+    border-bottom: 1.5px solid rgba(116, 22, 26, .55);
+  }
+  /* Siffrorna är eftertryckta flera gånger, som av en darrig hand */
+  .note .phone span { text-shadow: .8px .6px 0 rgba(116, 22, 26, .55), -.6px -.4px 0 rgba(116, 22, 26, .35); }
+
+  /* Darrig handstil */
+  .shaky span { display: inline-block; white-space: pre; }
+
+  /* Rött klotter med tusch från någon annan */
+  .scrawl {
+    position: absolute; pointer-events: none; z-index: 2;
+    font-family: "Rock Salt", cursive;
+    color: rgba(128, 14, 18, .82);
+    font-size: .78em; line-height: 2.2; word-spacing: .3em;
+    left: 12%; bottom: 104px;
+    transform: rotate(-11deg);
+    text-align: center;
+    mix-blend-mode: multiply;
+    filter: url(#ink);
+  }
+
+  /* Raden som upprepas */
+  .repeat { margin-top: 18px; line-height: 30px; }
+  .repeat p { white-space: nowrap; overflow: hidden; }
+
+  /* Pinnfigur ritad med blyerts */
+  .note .sigil {
+    position: absolute; right: 22px; bottom: 22px; z-index: 1;
+    width: 58px; height: 78px;
+    mix-blend-mode: multiply;
+    filter: url(#ink);
+    opacity: .8;
+  }
+
+  /* Reglerna */
+  .rules { padding: 10vh 22px; text-align: center; }
+  .rules h3 {
+    font-family: "VT323", monospace; font-weight: 400;
+    font-size: clamp(1.3rem, 5vw, 1.8rem); letter-spacing: 4px;
+    color: var(--dim);
+    margin-bottom: 26px;
+  }
+  .rules ol { list-style: none; display: grid; gap: 24px; max-width: 34ch; margin: 0 auto; }
+  .rules li {
+    font-size: clamp(1.05rem, 4vw, 1.35rem);
+    line-height: 1.55;
+    text-shadow: 0 0 10px #000, 0 0 3px #000;
+    opacity: 0; transform: translateY(14px);
+    transition: opacity 1.4s ease, transform 1.4s ease;
+  }
+  .rules li.on { opacity: 1; transform: none; }
+  .rules li span { display: block; font-family: "VT323", monospace; color: var(--rec); font-size: 1.2em; letter-spacing: 2px; }
+
+  /* Slutet */
+  .ending { padding: 16vh 22px 26vh; text-align: center; }
+  .countdown {
+    font-family: "VT323", monospace;
+    font-size: clamp(1.3rem, 5vw, 1.9rem);
+    color: var(--osd);
+    letter-spacing: 2px;
+    text-shadow: 0 0 6px rgba(255,255,255,.35);
+  }
+  .countdown small { display: block; font-size: .7em; color: var(--dim); letter-spacing: 4px; margin-bottom: 6px; }
+  .final {
+    margin-top: 14vh;
+    font-family: "Rock Salt", cursive;
+    font-size: clamp(1.5rem, 7vw, 2.4rem);
+    color: var(--marker-red);
+    transform: rotate(-4deg);
+    text-shadow: 0 0 14px rgba(0,0,0,.9);
+    opacity: 0; transition: opacity 2.5s;
+  }
+  .final.on { opacity: 1; }
+
+  /* Glitch när bandet hackar */
+  body.glitch main { animation: tear .22s steps(2) 1; }
+  body.glitch .scene { filter: contrast(1.6) brightness(1.4) hue-rotate(40deg); }
+  @keyframes tear {
+    0%   { transform: translateX(-10px) skewX(6deg); filter: drop-shadow(4px 0 rgba(255,0,0,.6)) drop-shadow(-4px 0 rgba(0,200,255,.6)); }
+    50%  { transform: translateX(8px) skewX(-4deg); }
+    100% { transform: none; filter: none; }
+  }
+  .static {
+    position: fixed; inset: 0; z-index: 60; pointer-events: none; overflow: hidden;
+    background: #111;
+    opacity: 0;
+  }
+  .static::before {
+    content: ""; position: absolute; inset: -50%; width: 200%; height: 200%;
+    background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='1'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23s)'/></svg>");
+    animation: noise .2s steps(3) infinite;
+  }
+  .static.flash { animation: flash .35s steps(3) 1; }
+  @keyframes flash { 0% { opacity: .9; } 60% { opacity: .6; } 100% { opacity: 0; } }
+
+  /* ---------- Mobil ---------- */
+  @media (max-width: 600px) {
+    .osd { font-size: 1.15rem; }
+    .osd .rec, .osd .mode { top: calc(12px + var(--sat)); }
+    .osd .rec { left: calc(14px + var(--sal)); }
+    .osd .mode { right: calc(14px + var(--sar)); }
+    .osd .stamp, .osd .play { bottom: calc(12px + var(--sab)); }
+    .osd .play { left: calc(14px + var(--sal)); }
+    .osd .stamp { right: calc(14px + var(--sar)); }
+    .corner { width: 18px; height: 18px; }
+    .c1, .c2 { top: calc(42px + var(--sat)); }
+    .c3, .c4 { bottom: calc(50px + var(--sab)); }
+
+    .screen { padding: calc(80px + var(--sat)) 20px calc(90px + var(--sab)); }
+
+    .note-wrap { padding: 4vh 14px 2vh; }
+    .note { padding: 44px 16px 116px 46px; transform: rotateX(3deg) rotate(-1.2deg); }
+    .scrawl { font-size: .62em; left: 10%; bottom: 132px; }
+    .note .sigil { right: 18px; bottom: 20px; width: 50px; height: 68px; }
+
+    .rules { padding: 12vh 20px; }
+    .ending { padding: 14vh 20px calc(30vh + var(--sab)); }
+  }
+
+  @media (max-width: 360px) {
+    .note { font-size: 1.6rem; padding-left: 42px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .leaf, .static { display: none; }
+    .caption, .note, .rules li, .final, .scroll-cue { opacity: 1 !important; transform: none !important; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Skogen: träd och pinnfigurer ritas av skriptet -->
+  <div class="scene" aria-hidden="true">
+    <svg id="forest" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice"></svg>
+  </div>
+  <div class="dark" id="dark" aria-hidden="true"></div>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <!-- Bläck: ojämna kanter och ojämn färg -->
+    <filter id="ink" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="3" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="1.4" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="8" result="b"/>
+      <feColorMatrix in="b" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.1 1.5" result="m"/>
+      <feComposite in="d" in2="m" operator="in"/>
+    </filter>
+
+  </svg>
+
+  <main>
+    <section class="screen" aria-label="Inledning">
+      <p class="caption small" data-delay="600">Följande material hittades i skogen på Resarö.</p>
+      <p class="caption" data-delay="3200">Det är adresserat till dig.</p>
+      <button class="scroll-cue" id="cue" data-go="note-wrap"><span class="tri">▶</span> SPELA UPP</button>
+    </section>
+
+    <section class="note-wrap" id="note-wrap">
+      <article class="note reveal" id="note">
+        <canvas class="paper" id="paper" aria-hidden="true"></canvas>
+
+        <div class="ink">
+          <h2>Om du hittar det här</h2>
+          <p>Greta fyller <span class="red">11</span>.</p>
+          <div class="gap"></div>
+          <p><b>Fredag 23 oktober</b></p>
+          <p>kl 18.00 &ndash; 22.00</p>
+          <p>I Gretas mörka, mörka hus.</p>
+          <p class="faint">Följ ljuset. Gå inte vilse.</p>
+          <div class="gap"></div>
+          <p>Vi var <span class="scratch">tolv</span> <span id="count">elva</span>.</p>
+          <p>Svara senast <b>18 oktober</b>.</p>
+          <p class="red shaky" data-shake="2.5">Ingen annan får veta.</p>
+        </div>
+
+        <div class="repeat" aria-hidden="true">
+          <p class="shaky" data-shake="1" style="opacity:.75">vi var elva vi var elva vi var elva</p>
+          <p class="shaky smudged" data-shake="3" style="opacity:.55">vi var elva vi var elva vi var el</p>
+          <p class="shaky" data-shake="6" style="opacity:.35">vi var elva vi va  elv</p>
+          <p class="shaky" data-shake="10" style="opacity:.2">vi   var</p>
+        </div>
+
+        <div class="scrawl" aria-hidden="true">DU HAR REDAN<br>SAGT JA</div>
+
+        <svg class="sigil" viewBox="0 0 64 84" aria-hidden="true">
+          <g stroke="#3b3b3d" stroke-width="2.2" stroke-linecap="round" fill="none">
+            <path d="M32 4 Q31 40 33 80"/>
+            <path d="M6 27 Q30 23 58 21"/>
+            <path d="M32 50 L13 78"/>
+            <path d="M33 50 L51 79"/>
+            <path d="M6 27 L3 14"/>
+            <path d="M58 21 L61 9"/>
+          </g>
+          <g stroke="#3b3b3d" stroke-width="1" fill="none" opacity=".7">
+            <path d="M31 5 Q30 40 32 79 M7 28 Q30 24 57 22"/>
+            <path d="M28 17 L36 18 M28 33 L37 31 M29 36 L36 35"/>
+          </g>
+        </svg>
+      </article>
+    </section>
+
+    <div class="next"><button class="scroll-cue on" data-go="rules"><span class="tri">▶▶</span> SPOLA FRAM</button></div>
+
+    <section class="rules" id="rules" aria-label="Regler">
+      <h3>[ REGLER FÖR NATTEN ]</h3>
+      <ol>
+        <li class="reveal"><span>01</span>Kom förklädd. Ingen ska kunna känna igen dig.</li>
+        <li class="reveal"><span>02</span>Ta med en ficklampa. Du kommer att behöva den.</li>
+        <li class="reveal"><span>03</span>Gå aldrig ensam in bland träden.</li>
+        <li class="reveal"><span>04</span>Om du hittar en figur av pinnar &ndash; rör den inte.</li>
+        <li class="reveal"><span>05</span>Och vad som än händer: <br>stå inte i hörnet.</li>
+      </ol>
+    </section>
+
+    <div class="next"><button class="scroll-cue on" data-go="ending"><span class="tri">▶▶</span> SPOLA FRAM</button></div>
+
+    <section class="ending" id="ending">
+      <p class="countdown" id="countdown"></p>
+      <p class="final reveal" id="final">Vi ser dig.</p>
+    </section>
+  </main>
+
+  <div class="vhs" aria-hidden="true">
+    <div class="noise"></div>
+    <div class="scanlines"></div>
+    <div class="tracking"></div>
+    <div class="vignette"></div>
+    <div class="osd">
+      <div class="rec"><i></i>REC</div>
+      <div class="mode">SP <span class="batt"><span></span><b></b></span></div>
+      <div class="play">▶ BAND 11</div>
+      <div class="stamp"><span id="clock">18:00:00</span><br>OKT 23 2026</div>
+      <div class="corner c1"></div><div class="corner c2"></div>
+      <div class="corner c3"></div><div class="corner c4"></div>
+    </div>
+  </div>
+  <div class="static" id="static" aria-hidden="true"></div>
+  <button class="sound" id="sound" aria-pressed="false">♪ LJUD AV</button>
+
+<script>
+  const PARTY_START = new Date("2026-10-23T18:00:00+02:00");
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- Rita skogen ----------
+  const NS = "http://www.w3.org/2000/svg";
+  const forest = document.getElementById("forest");
+  function el(tag, attrs, parent = forest) {
+    const n = document.createElementNS(NS, tag);
+    for (const k in attrs) n.setAttribute(k, attrs[k]);
+    parent.appendChild(n);
+    return n;
+  }
+  el("rect", { width: 1000, height: 1000, fill: "#0c0e0b" });
+
+  // Tre lager av stammar, längst bak ljusast (dimma)
+  const layers = [
+    { n: 22, w: [6, 14],  c: "#1e211c" },
+    { n: 16, w: [14, 30], c: "#161814" },
+    { n: 9,  w: [34, 70], c: "#0e0f0c" }
+  ];
+  const trunks = [];
+  layers.forEach((L, li) => {
+    for (let i = 0; i < L.n; i++) {
+      const x = Math.random() * 1000;
+      const w = L.w[0] + Math.random() * (L.w[1] - L.w[0]);
+      const lean = (Math.random() - .5) * 30;
+      el("path", {
+        d: `M${x} 1000 L${x + lean} 0 L${x + lean + w} 0 L${x + w} 1000Z`,
+        fill: L.c
+      });
+      // Grenar
+      for (let b = 0; b < 2 + li; b++) {
+        const by = 120 + Math.random() * 520;
+        const dir = Math.random() > .5 ? 1 : -1;
+        const len = 40 + Math.random() * (60 + li * 40);
+        el("path", {
+          d: `M${x + w / 2 + lean * (1 - by / 1000)} ${by} q${dir * len * .5} ${-20} ${dir * len} ${-50 - Math.random() * 40}`,
+          stroke: L.c, "stroke-width": 2 + li * 2, fill: "none", "stroke-linecap": "round"
+        });
+      }
+      if (li === 1) trunks.push({ x: x + w / 2, lean });
+    }
+  });
+  // Dimma längs marken
+  const defs = el("defs", {});
+  const g = el("linearGradient", { id: "fog", x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+  el("stop", { offset: 0, "stop-color": "#9aa39a", "stop-opacity": 0 }, g);
+  el("stop", { offset: 1, "stop-color": "#9aa39a", "stop-opacity": .18 }, g);
+  el("rect", { x: 0, y: 700, width: 1000, height: 300, fill: "url(#fog)" });
+
+  // Pinnfigurer som hänger i grenarna
+  function stickman(x, y, s) {
+    const grp = el("g", { class: "stickman", transform: `translate(${x} ${y}) scale(${s})` });
+    el("path", { d: "M0 -40 L0 0", stroke: "#3b3a33", "stroke-width": 1, fill: "none" }, grp);
+    const body = el("g", { stroke: "#4a3b2a", "stroke-width": 3, "stroke-linecap": "round", fill: "none" }, grp);
+    el("path", { d: "M0 0 L0 70 M-24 20 L24 16 M0 44 L-16 70 M0 44 L16 70 M-24 20 L-28 8 M24 16 L28 4" }, body);
+    el("path", { d: "M-3 12 L3 12 M-3 30 L3 28", stroke: "#2c2218", "stroke-width": 2 }, body);
+    grp.style.animationDelay = (-Math.random() * 5) + "s";
+    grp.style.animationDuration = (4 + Math.random() * 3) + "s";
+  }
+  stickman(180, 260, 1.1);
+  stickman(760, 200, .8);
+  stickman(520, 380, .6);
+  stickman(880, 470, 1.3);
+  stickman(330, 520, .7);
+
+  // ---------- Löv ----------
+  const leafColors = ["#3a2412", "#4d2e15", "#2d1d10", "#5a3418"];
+  for (let i = 0; i < (innerWidth < 600 ? 6 : 11); i++) {
+    const l = document.createElement("div");
+    l.className = "leaf";
+    l.setAttribute("aria-hidden", "true");
+    const size = 12 + Math.random() * 14;
+    l.style.width = l.style.height = size + "px";
+    l.style.left = Math.random() * 100 + "vw";
+    l.style.animationDuration = (13 + Math.random() * 12) + "s";
+    l.style.animationDelay = (-Math.random() * 25) + "s";
+    l.innerHTML = `<svg viewBox="0 0 20 20"><path d="M10 1 L12 6 L17 5 L14 9 L19 11 L13 12 L14 17 L10 14 L6 17 L7 12 L1 11 L6 9 L3 5 L8 6Z" fill="${leafColors[i % 4]}"/></svg>`;
+    document.body.appendChild(l);
+  }
+
+  // ---------- Ficklampan följer fingret eller musen ----------
+  const dark = document.getElementById("dark");
+  let tx = innerWidth / 2, ty = innerHeight * .38, cx = tx, cy = ty, lastMove = 0;
+  function aim(x, y) { tx = x; ty = y; lastMove = performance.now(); }
+  addEventListener("pointermove", e => aim(e.clientX, e.clientY));
+  addEventListener("touchmove", e => aim(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+  addEventListener("touchstart", e => aim(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
+  function frame(t) {
+    // När ingen rör sig sveper lampan långsamt själv, som en darrig hand
+    if (t - lastMove > 2500) {
+      tx = innerWidth * (.5 + Math.sin(t / 2300) * .3);
+      ty = innerHeight * (.4 + Math.sin(t / 1700) * .15);
+    }
+    const jitter = reduce ? 0 : Math.sin(t / 90) * 2 + Math.sin(t / 37) * 1.5;
+    cx += (tx - cx) * .08; cy += (ty - cy) * .08;
+    // Lampan flimrar ibland
+    const flicker = Math.random() < .015 ? .5 : 1;
+    dark.style.setProperty("--x", (cx + jitter) + "px");
+    dark.style.setProperty("--y", (cy + jitter) + "px");
+    dark.style.opacity = flicker === 1 ? 1 : 1.0;
+    dark.style.filter = flicker === 1 ? "" : "brightness(0.3)";
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // ---------- Inledningstexten ----------
+  document.querySelectorAll(".caption").forEach(c => {
+    setTimeout(() => c.classList.add("on"), reduce ? 0 : +c.dataset.delay);
+  });
+  setTimeout(() => document.getElementById("cue").classList.add("on"), reduce ? 0 : 5600);
+
+  // ---------- Saker dyker upp när man scrollar ----------
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("on"); io.unobserve(e.target); }
+  }), { threshold: .2 });
+  document.querySelectorAll(".reveal").forEach((r, i) => {
+    r.style.transitionDelay = r.tagName === "LI" ? "0.2s" : "0s";
+    io.observe(r);
+  });
+
+  // ---------- Kamerans klocka ----------
+  const clock = document.getElementById("clock");
+  const t0 = performance.now();
+  setInterval(() => {
+    const s = Math.floor((performance.now() - t0) / 1000);
+    const hh = 18 + Math.floor(s / 3600), mm = Math.floor(s / 60) % 60, ss = s % 60;
+    clock.textContent = `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}:${String(ss).padStart(2, "0")}`;
+  }, 250);
+
+  // ---------- Darrig handstil: varje bokstav lite snett ----------
+  document.querySelectorAll(".shaky").forEach(p => {
+    const amt = +p.dataset.shake || 2;
+    const text = p.textContent;
+    p.textContent = "";
+    [...text].forEach((ch, i) => {
+      const sp = document.createElement("span");
+      sp.textContent = ch;
+      const drift = amt * (i / text.length);
+      sp.style.transform = `translateY(${(Math.random() - .5) * (amt + drift)}px) rotate(${(Math.random() - .5) * (amt * 3 + drift * 2)}deg)`;
+      p.appendChild(sp);
+    });
+  });
+
+  // ---------- Pappret: ritas pixel för pixel ----------
+  function makeNoise(seed) {
+    const p = new Uint8Array(512);
+    let s = seed * 9301 + 49297;
+    const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+    const perm = [...Array(256).keys()];
+    for (let i = 255; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [perm[i], perm[j]] = [perm[j], perm[i]]; }
+    for (let i = 0; i < 512; i++) p[i] = perm[i & 255];
+    const val = new Float32Array(256).map(() => rnd());
+    const fade = t => t * t * (3 - 2 * t);
+    function n2(x, y) {
+      const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+      const X = xi & 255, Y = yi & 255;
+      const a = val[p[p[X] + Y]], b = val[p[p[X + 1] + Y]], c = val[p[p[X] + Y + 1]], d = val[p[p[X + 1] + Y + 1]];
+      const u = fade(xf), v = fade(yf);
+      return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+    }
+    return function fbm(x, y, oct = 4) {
+      let sum = 0, amp = .5, f = 1, norm = 0;
+      for (let i = 0; i < oct; i++) { sum += amp * n2(x * f, y * f); norm += amp; amp *= .5; f *= 2.03; }
+      return sum / norm;
+    };
+  }
+
+  function drawPaper() {
+    const note = document.getElementById("note");
+    const cv = document.getElementById("paper");
+    const w = note.offsetWidth, h = note.offsetHeight;
+    if (!w || !h) return;
+    const sc = Math.min(window.devicePixelRatio || 1, 1.5);
+    const W = Math.round(w * sc), H = Math.round(h * sc);
+    cv.width = W; cv.height = H;
+    const ctx = cv.getContext("2d");
+    if (!ctx) { note.classList.add("no-canvas"); return; }
+
+    const nA = makeNoise(7), nB = makeNoise(23), nC = makeNoise(51), nD = makeNoise(88);
+
+    // Skrynklor: höjdkarta i låg upplösning, belyst snett ovanifrån
+    const LS = 4, lw = Math.ceil(W / LS) + 2, lh = Math.ceil(H / LS) + 2;
+    const shade = new Float32Array(lw * lh), blot = new Float32Array(lw * lh);
+    const hgt = new Float32Array(lw * lh), edgeN = new Float32Array(lw * lh), lineN = new Float32Array(lw * lh), mudN = new Float32Array(lw * lh);
+    for (let y = 0; y < lh; y++) for (let x = 0; x < lw; x++) {
+      const cx = x * LS / sc, cy = y * LS / sc;
+      // Skarpa veck: absolutvärde ger kanter som i skrynklat papper
+      const r = Math.abs(nA(cx / 70, cy / 70, 5) - .5) * 2;
+      hgt[y * lw + x] = r * 1.0 + nB(cx / 25, cy / 25, 3) * .35;
+      blot[y * lw + x] = nC(cx / 120, cy / 120, 4);
+      edgeN[y * lw + x] = nC(cx / 15, cy / 15, 3);
+      lineN[y * lw + x] = nC(cx / 40, cy / 40, 2);
+      mudN[y * lw + x] = nA(cx / 9, cy / 9, 3);
+    }
+    for (let y = 1; y < lh - 1; y++) for (let x = 1; x < lw - 1; x++) {
+      const i = y * lw + x;
+      const dx = hgt[i + 1] - hgt[i - 1], dy = hgt[i + lw] - hgt[i - lw];
+      // ljuset kommer uppifrån vänster
+      shade[i] = 1 + (-dx * .9 - dy * 1.1) * 1.1;
+    }
+    const sample = (arr, px, py) => {
+      const fx = px / LS, fy = py / LS, x0 = fx | 0, y0 = fy | 0, tx = fx - x0, ty = fy - y0;
+      const i = y0 * lw + x0;
+      return (arr[i] * (1 - tx) + arr[i + 1] * tx) * (1 - ty) + (arr[i + lw] * (1 - tx) + arr[i + lw + 1] * tx) * ty;
+    };
+
+    // Rivkanter
+    const topEdge = x => 5 + nD(x / 18, 1, 4) * 9 + (x > w * .8 ? Math.pow((x - w * .8) / (w * .2), 1.6) * 34 * (0.7 + nD(x / 6, 3, 2) * .6) : 0);
+    const botEdge = x => h - 5 - nD(x / 20, 9, 4) * 11;
+    const ripY = h * .46;
+    const rightEdge = y => {
+      let e = w - 2 - nD(4, y / 30, 3) * 5;
+      const d = Math.abs(y - ripY);
+      if (d < 14) e -= (1 - d / 14) * 30 * (0.8 + nD(9, y / 3, 2) * .4);
+      return e;
+    };
+    // Spiralhål, några utrivna mot kanten
+    const holes = [];
+    for (let k = 0; k * 34 + 17 < h; k++) holes.push({ y: 17 + k * 34, r: 6 + nD(k, 2) * 1.6, open: nD(k * 3.1, 7) > .55 });
+    const leftEdge = y => 3 + nD(2, y / 14, 3) * 3;
+
+    // Vattenfläckar med mörk kant
+    const stains = [
+      { x: w * .78, y: h * .36, r: Math.min(80, w * .19), seed: 3 },
+      { x: w * .34, y: h * .63, r: Math.min(52, w * .12), seed: 9 },
+      { x: w * .1,  y: h * .93, r: Math.min(70, w * .16), seed: 14 }
+    ];
+    // Lera
+    const muds = [
+      { x: w * .9, y: h * .1, rx: 34, ry: 46, a: .5 },
+      { x: w * .03, y: h * .5, rx: 26, ry: 80, a: -.1 },
+      { x: w * .55, y: h * .99, rx: 90, ry: 24, a: 0 }
+    ];
+    // Små rostfläckar
+    const fox = Array.from({ length: 14 }, (_, i) => ({ x: nB(i * 7.3, 1) * w * 1.6 - w * .3, y: nC(i * 5.1, 2) * h * 1.6 - h * .3, r: 1 + nA(i, 4) * 4 }));
+
+    const colT = new Float32Array(W), colB = new Float32Array(W), rowR = new Float32Array(H), rowL = new Float32Array(H);
+    for (let px = 0; px < W; px++) { colT[px] = topEdge(px / sc); colB[px] = botEdge(px / sc); }
+    for (let py = 0; py < H; py++) { rowR[py] = rightEdge(py / sc); rowL[py] = leftEdge(py / sc); }
+    // Fläckarnas ojämna kontur, förberäknad per vinkel
+    stains.forEach(st => { st.tab = new Float32Array(361); for (let a = 0; a <= 360; a++) { const ang = a / 180 * Math.PI; st.tab[a] = st.r * (.8 + nD(Math.cos(ang) * 2 + st.seed, Math.sin(ang) * 2 + st.seed, 3) * .45); } });
+
+    const img = ctx.createImageData(W, H), d = img.data;
+    const fold1 = h / 3, fold2 = h * 2 / 3, foldV = w / 2;
+    for (let py = 0; py < H; py++) {
+      const y = py / sc;
+      const tE = null;
+      for (let px = 0; px < W; px++) {
+        const x = px / sc, i = (py * W + px) * 4;
+
+        // --- Form och genomskinlighet ---
+        const t = colT[px], b = colB[px], r = rowR[py], l = rowL[py];
+        let dist = Math.min(y - t, b - y, r - x, x - l);
+        let alpha = Math.max(0, Math.min(1, dist * 1.4 + .3));
+        // hål
+        if (x < 26) for (let k = Math.max(0, Math.floor((y - 17) / 34) - 1); k < holes.length && k <= Math.floor((y - 17) / 34) + 1; k++) {
+          const H0 = holes[k];
+          if (!H0) continue;
+          const dy = y - H0.y, dx = x - 15;
+          const hd = Math.sqrt(dx * dx + dy * dy) - H0.r - Math.random() * 1.2;
+          if (hd < 0) alpha = 0; else { alpha = Math.min(alpha, hd * 1.4 + .2); dist = Math.min(dist, hd); }
+          if (H0.open && x < 15 && Math.abs(dy) < H0.r * .9 + Math.random() * 1.5) alpha = 0;
+        }
+        if (alpha <= 0) { d[i + 3] = 0; continue; }
+
+        // --- Färg ---
+        let R = 218, G = 209, B = 188;
+        // gulnad och ojämn ton
+        const bl = sample(blot, px, py);
+        const yel = (bl - .5) * 26;
+        R += yel * .6; G += yel * .3; B -= yel * .9;
+        // skrynklor
+        let sh = sample(shade, px, py);
+        // veck där lappen varit hopvikt
+        const f1 = y - fold1, f2 = y - fold2, fv = x - foldV;
+        for (const f of [f1, f2, fv]) {
+          if (Math.abs(f) < 2.4) sh *= f < 0 ? .86 : 1.07;
+          else if (Math.abs(f) < 9) sh *= 1 - (9 - Math.abs(f)) / 9 * .03;
+        }
+        R *= sh; G *= sh; B *= sh;
+
+        // fibrer och korn
+        const g = (Math.random() - .5) * 11;
+        R += g; G += g; B += g;
+
+        // linjer på blockpappret, blekta
+        const ly = (y - 48 + 1) % 34;
+        if (y > 30 && ly > 32.2 && ly < 33.6) {
+          const fade = .25 + sample(lineN, px, py) * .35;
+          R -= 60 * fade; G -= 40 * fade; B -= 5 * fade;
+        }
+        // röd marginal
+        if (Math.abs(x - 38) < .7) { const fade = .35 + sample(lineN, px, py) * .3; G -= 70 * fade; B -= 60 * fade; R -= 10 * fade; }
+
+        // vattenfläckar
+        for (const s of stains) {
+          const dx = x - s.x, dy = y - s.y;
+          const dd2 = dx * dx + dy * dy;
+          if (dd2 > s.r * s.r * 1.7) continue;
+          const ang = Math.atan2(dy, dx);
+          const q = Math.sqrt(dd2) / s.tab[Math.round((ang + Math.PI) / Math.PI * 180) % 361];
+          if (q < 1.08) {
+            const ring = Math.exp(-Math.pow((q - 1) / .035, 2)) * .22 + (q < 1 ? .05 + (1 - q) * .02 : 0);
+            R -= 255 * ring * .45; G -= 255 * ring * .6; B -= 255 * ring * .85;
+          }
+        }
+        // lera
+        for (const m of muds) {
+          if (Math.abs(x - m.x) > m.ry * 1.5 || Math.abs(y - m.y) > m.ry * 1.5) continue;
+          const ca = Math.cos(m.a), sa = Math.sin(m.a);
+          const dx = (x - m.x) * ca + (y - m.y) * sa, dy = -(x - m.x) * sa + (y - m.y) * ca;
+          const q = Math.sqrt((dx / m.rx) ** 2 + (dy / m.ry) ** 2);
+          if (q < 1.4) {
+            const n = sample(mudN, px, py);
+            const amt = Math.max(0, (1.25 - q) - (n - .5) * 1.2) * .55;
+            if (amt > 0) { R -= amt * 110; G -= amt * 125; B -= amt * 135; }
+          }
+        }
+        // rostfläckar
+        for (const f of fox) {
+          const fx = x - f.x, fy = y - f.y;
+          if (fx > 15 || fx < -15 || fy > 15 || fy < -15) continue;
+          const dd = Math.sqrt(fx * fx + fy * fy);
+          if (dd < f.r * 3) { const a = Math.exp(-dd * dd / (f.r * f.r)) * .5; R -= 50 * a; G -= 80 * a; B -= 110 * a; }
+        }
+
+        // mörkare, smutsiga kanter – men ljusa fibrer precis där det rivits
+        if (dist < 34) {
+          const e = Math.pow(1 - dist / 34, 2.2) * (.5 + sample(edgeN, px, py) * .7);
+          R -= 80 * e; G -= 95 * e; B -= 110 * e;
+        }
+        if (dist < 2.2) { const lift = (2.2 - dist) * 9 * Math.random(); R += lift; G += lift; B += lift; }
+
+        d[i] = R; d[i + 1] = G; d[i + 2] = B; d[i + 3] = alpha * 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+
+    // Lösa fibrer och repor
+    ctx.save(); ctx.scale(sc, sc);
+    ctx.globalCompositeOperation = "source-atop";
+    for (let k = 0; k < 260; k++) {
+      const x = Math.random() * w, y = Math.random() * h, len = 2 + Math.random() * 9, a = Math.random() * Math.PI;
+      ctx.strokeStyle = Math.random() < .5 ? "rgba(255,250,235,.18)" : "rgba(60,40,20,.12)";
+      ctx.lineWidth = .4 + Math.random() * .5;
+      ctx.beginPath(); ctx.moveTo(x, y);
+      ctx.quadraticCurveTo(x + Math.cos(a) * len / 2 + (Math.random() - .5) * 3, y + Math.sin(a) * len / 2, x + Math.cos(a) * len, y + Math.sin(a) * len);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  let paperW = 0;
+  function redrawPaper() {
+    const w = document.getElementById("note").offsetWidth;
+    if (w === paperW) return;
+    paperW = w;
+    try { drawPaper(); } catch (e) { document.getElementById("note").classList.add("no-canvas"); }
+  }
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { paperW = 0; redrawPaper(); });
+  let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(redrawPaper, 250); });
+
+  // ---------- Varje handskriven rad lutar lite olika ----------
+  document.querySelectorAll(".note .ink > p, .note h2, .repeat p").forEach(p => {
+    p.style.transform = `rotate(${(Math.random() - .5) * 1.4}deg) translateX(${(Math.random() - .5) * 5}px)`;
+  });
+
+  // ---------- Skriket ----------
+  function buildScream(ac, dest, noiseBuf, t) {
+    const dur = 2.8;
+    // Rösten: två lite ostämda sågtandsvågor
+    const voice = ac.createGain();
+    const pitch = [];
+    [0, 9].forEach(det => {
+      const o = ac.createOscillator(); o.type = "sawtooth"; o.detune.value = det;
+      o.frequency.setValueAtTime(320, t);
+      o.frequency.exponentialRampToValueAtTime(1150, t + .2);
+      o.frequency.linearRampToValueAtTime(1040, t + .9);
+      o.frequency.linearRampToValueAtTime(1200, t + 1.5);
+      o.frequency.exponentialRampToValueAtTime(380, t + dur);
+      o.connect(voice); o.start(t); o.stop(t + dur + .1); pitch.push(o);
+    });
+    // Darrande vibrato och ojämnhet
+    const vib = ac.createOscillator(), vg = ac.createGain();
+    vib.frequency.value = 6.5; vg.gain.value = 40;
+    const jit = ac.createOscillator(), jg = ac.createGain();
+    jit.type = "square"; jit.frequency.value = 13; jg.gain.value = 16;
+    vib.connect(vg); jit.connect(jg);
+    pitch.forEach(o => { vg.connect(o.frequency); jg.connect(o.frequency); });
+    vib.start(t); jit.start(t); vib.stop(t + dur); jit.stop(t + dur);
+    // Andning och rasp
+    const br = ac.createBufferSource(); br.buffer = noiseBuf; br.loop = true;
+    const bg = ac.createGain(); bg.gain.value = .4;
+    br.connect(bg).connect(voice); br.start(t); br.stop(t + dur);
+
+    // Skärpa
+    const shaper = ac.createWaveShaper(), curve = new Float32Array(1024);
+    for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; curve[i] = Math.tanh(x * 4); }
+    shaper.curve = curve;
+    voice.connect(shaper);
+
+    // Formanter som glider från "aaa" mot "iii"
+    const env = ac.createGain();
+    [[850, 1, 5, 680], [1300, .7, 6, 2100], [2900, .45, 8, 3100], [3600, .3, 8, 3700]].forEach(([f, g, q, f2]) => {
+      const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = q;
+      bp.frequency.setValueAtTime(f, t); bp.frequency.linearRampToValueAtTime(f2, t + 1.6);
+      const fg = ac.createGain(); fg.gain.value = g * 1.8; // bandpassfiltren dämpar mycket, så vi förstärker
+      shaper.connect(bp).connect(fg).connect(env);
+    });
+    // Lite avstånd: dämpa diskanten
+    const lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 5000;
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(1, t + .1);
+    env.gain.setValueAtTime(1, t + 1.6);
+    env.gain.linearRampToValueAtTime(.6, t + 2.2);
+    env.gain.exponentialRampToValueAtTime(.001, t + dur);
+    env.connect(lp).connect(dest);
+    return dur;
+  }
+
+  // ---------- Ljud, skapat direkt i webbläsaren ----------
+  const Sound = (() => {
+    let ctx, master, noiseBuf, on = false, started = false, snapTimer;
+    function noise(seconds = 2) {
+      const b = ctx.createBuffer(1, ctx.sampleRate * seconds, ctx.sampleRate);
+      const d = b.getChannelData(0);
+      for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      return b;
+    }
+    function loopNoise() {
+      const src = ctx.createBufferSource();
+      src.buffer = noiseBuf; src.loop = true; src.start();
+      return src;
+    }
+    function lfo(freq, depth, target, offset) {
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.frequency.value = freq; g.gain.value = depth;
+      o.connect(g).connect(target); o.start();
+      if (offset !== undefined) target.value = offset;
+    }
+    function start() {
+      ctx = new (window.AudioContext || window.webkitAudioContext)();
+      master = ctx.createGain(); master.gain.value = 0;
+      const comp = ctx.createDynamicsCompressor();
+      comp.threshold.value = -14; comp.ratio.value = 6; comp.attack.value = .005; comp.release.value = .3;
+      master.connect(comp).connect(ctx.destination);
+      noiseBuf = noise(3);
+
+      // Bandbrus
+      const hiss = loopNoise(), hp = ctx.createBiquadFilter(), hg = ctx.createGain();
+      hp.type = "highpass"; hp.frequency.value = 3500; hg.gain.value = .018;
+      hiss.connect(hp).connect(hg).connect(master);
+
+      // Vind som sveper genom träden
+      const wind = loopNoise(), bp = ctx.createBiquadFilter(), wg = ctx.createGain();
+      bp.type = "bandpass"; bp.Q.value = .8;
+      lfo(.07, 280, bp.frequency, 520);
+      lfo(.13, .05, wg.gain, .09);
+      wind.connect(bp).connect(wg).connect(master);
+
+      // Lågt mullrande som svävar
+      const lp = ctx.createBiquadFilter(), dg = ctx.createGain();
+      lp.type = "lowpass"; lp.frequency.value = 180; dg.gain.value = .06;
+      [55, 55.6, 82.4].forEach(f => {
+        const o = ctx.createOscillator(); o.type = "triangle"; o.frequency.value = f;
+        o.connect(lp); o.start();
+      });
+      lfo(.05, .03, dg.gain, .06);
+      lp.connect(dg).connect(master);
+
+      scheduleSnap();
+      started = true;
+    }
+    // Knakande kvistar, från olika håll
+    function snap() {
+      if (!ctx) return;
+      const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      const p = Math.random() * 1.8 - .9;
+      if (pan) { pan.pan.value = p; pan.connect(master); }
+      const cracks = 1 + Math.floor(Math.random() * 3);
+      for (let i = 0; i < cracks; i++) {
+        const t = ctx.currentTime + i * (.08 + Math.random() * .25);
+        const src = ctx.createBufferSource(); src.buffer = noiseBuf;
+        const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 1500 + Math.random() * 2500; f.Q.value = 3;
+        const g = ctx.createGain();
+        g.gain.setValueAtTime(0, t);
+        g.gain.linearRampToValueAtTime(.5 + Math.random() * .4, t + .003);
+        g.gain.exponentialRampToValueAtTime(.001, t + .06 + Math.random() * .05);
+        src.connect(f).connect(g).connect(pan || master);
+        src.start(t, Math.random() * 2, .2);
+      }
+    }
+    function scheduleSnap() {
+      clearTimeout(snapTimer);
+      snapTimer = setTimeout(() => { if (on) snap(); scheduleSnap(); }, 5000 + Math.random() * 10000);
+    }
+    // Brus när bandet hackar eller spolas
+    function burst(len = .3, vol = .35) {
+      if (!on) return;
+      const t = ctx.currentTime;
+      const src = ctx.createBufferSource(); src.buffer = noiseBuf;
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(.001, t + len);
+      src.connect(g).connect(master); src.start(t, Math.random(), len);
+    }
+    // Kassettens mekaniska klunk
+    function clunk() {
+      if (!on) return;
+      const t = ctx.currentTime;
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type = "square"; o.frequency.setValueAtTime(120, t); o.frequency.exponentialRampToValueAtTime(40, t + .08);
+      g.gain.setValueAtTime(.25, t); g.gain.exponentialRampToValueAtTime(.001, t + .1);
+      o.connect(g).connect(master); o.start(t); o.stop(t + .12);
+      setTimeout(() => burst(.35, .3), 60);
+    }
+    // Hjärtslag
+    function heartbeat(times = 4) {
+      if (!on) return;
+      for (let i = 0; i < times; i++) {
+        [0, .28].forEach((off, k) => {
+          const t = ctx.currentTime + i * 1.05 + off;
+          const o = ctx.createOscillator(), g = ctx.createGain();
+          o.frequency.setValueAtTime(60, t); o.frequency.exponentialRampToValueAtTime(35, t + .15);
+          g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(k ? .35 : .5, t + .01);
+          g.gain.exponentialRampToValueAtTime(.001, t + .2);
+          o.connect(g).connect(master); o.start(t); o.stop(t + .25);
+        });
+      }
+    }
+    // Ett avlägset skrik i skogen
+    let verb;
+    function reverb() {
+      if (verb) return verb;
+      const len = ctx.sampleRate * 3.2, ir = ctx.createBuffer(2, len, ctx.sampleRate);
+      for (let c = 0; c < 2; c++) {
+        const d = ir.getChannelData(c);
+        for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3.2);
+      }
+      verb = ctx.createConvolver(); verb.buffer = ir; verb.connect(master);
+      return verb;
+    }
+    function scream(delay = 0) {
+      if (!on) return;
+      const out = ctx.createGain();
+      const pan = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+      if (pan) { pan.pan.value = Math.random() < .5 ? -.5 : .5; out.connect(pan); pan.connect(master); pan.connect(reverb()); }
+      else { out.connect(master); out.connect(reverb()); }
+      buildScream(ctx, out, noiseBuf, ctx.currentTime + delay);
+    }
+    function set(v) {
+      if (v && !started) start();
+      on = v;
+      if (ctx) {
+        ctx.resume();
+        master.gain.cancelScheduledValues(ctx.currentTime);
+        master.gain.linearRampToValueAtTime(v ? .9 : 0, ctx.currentTime + (v ? 1.5 : .3));
+      }
+      const b = document.getElementById("sound");
+      b.textContent = v ? "♪ LJUD PÅ" : "♪ LJUD AV";
+      b.setAttribute("aria-pressed", v);
+    }
+    return { set, toggle: () => set(!on), isOn: () => on, burst, clunk, heartbeat, scream };
+  })();
+  document.getElementById("sound").addEventListener("click", Sound.toggle);
+
+  // ---------- Hjärtslag och skrik varje gång man når slutet ----------
+  let lastScream = -1e9;
+  new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting && Sound.isOn() && performance.now() - lastScream > 12000) {
+      lastScream = performance.now();
+      Sound.heartbeat(3);
+      Sound.scream(3.2);
+    }
+  }), { threshold: .6 }).observe(document.getElementById("final"));
+
+  // ---------- Knapparna spolar fram ----------
+  const stat = document.getElementById("static");
+  document.querySelectorAll("[data-go]").forEach(b => b.addEventListener("click", () => {
+    if (b.id === "cue" && !Sound.isOn()) Sound.set(true);
+    // Fem sekunder efter SPELA UPP hörs ett skrik i skogen
+    if (b.id === "cue" && !b.dataset.screamed) { b.dataset.screamed = "1"; Sound.scream(5); }
+    Sound.clunk();
+    if (!reduce) { stat.classList.remove("flash"); void stat.offsetWidth; stat.classList.add("flash"); }
+    const target = document.getElementById(b.dataset.go);
+    setTimeout(() => {
+      target.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+      target.querySelectorAll(".reveal").forEach(r => r.classList.add("on"));
+    }, reduce ? 0 : 180);
+  }));
+
+  // ---------- Bandet hackar ibland ----------
+  const count = document.getElementById("count");
+  function glitch() {
+    if (!reduce) {
+      document.body.classList.add("glitch");
+      if (Math.random() < .5) { count.textContent = "tolv"; setTimeout(() => count.textContent = "elva", 260); }
+      Sound.burst(.18, .2);
+      if (Math.random() < .35) { stat.classList.remove("flash"); void stat.offsetWidth; stat.classList.add("flash"); }
+      setTimeout(() => document.body.classList.remove("glitch"), 230);
+    }
+    setTimeout(glitch, 5000 + Math.random() * 9000);
+  }
+  setTimeout(glitch, 7000);
+
+  // ---------- Nedräkning ----------
+  function tick() {
+    const diff = PARTY_START - new Date();
+    const elc = document.getElementById("countdown");
+    if (diff <= 0) { elc.innerHTML = "<small>INSPELNING PÅGÅR</small>DET HAR BÖRJAT"; return; }
+    const d = Math.floor(diff / 864e5), h = Math.floor(diff / 36e5) % 24, m = Math.floor(diff / 6e4) % 60;
+    elc.innerHTML = `<small>TID KVAR</small>${d}D ${String(h).padStart(2, "0")}H ${String(m).padStart(2, "0")}M`;
+  }
+  tick(); setInterval(tick, 30000);
+</script>
+</body>
+</html>
